@@ -37,78 +37,74 @@ let openImagePickerAsync = async () => {
     setImageUrl(pickerResult.uri);
   }
   // upload image to firebase called by signUp fiunction after form validation done
-  const uploadImage = async(uid) => {
-  
-    const response = await fetch(ImageUrl);
-    const blob = await response.blob();
-    let storageRef = storage.ref();
+ 
+    
+    
 
                 // Create a reference to folder where we will store this images here we will save in userImages
-                    let userImagesRef = storageRef.child('userProfiles').child(uid);
+                   
 
                     // Create a reference to 'images/mountains.jpg'
                     // let userImagesRef = storageRef.child(ImageUrl);
-   const uploadTask = userImagesRef.put(blob)
+   
 
-        // Now get download url and show image upload progress
-        uploadTask.on('state_changed', 
-                (snapshot) => {
-    // Observe state change events such as progress, pause, and resume
-    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  }, 
-  (error) => {
-    // Handle unsuccessful uploads
-    setSnackbarState({visible:true,message:error.message})
-  }, 
-  () => {
-    // Handle successful uploads on complete
- 
-    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-        console.log("line 68", downloadURL);
-            return downloadURL
-    }).catch((e)=>{
-            return e.message
-    });
-  }
-);
-
-
-
-  }
+  
     const SignUp= async()=>{
-        
+       
         auth.createUserWithEmailAndPassword(Email, Password).then((credential)=>{
 
             const user= credential.user;
                 // upload user profile picture to firebase storage
-                let DpSource ="";
-                if(!!ImageUrl){  // Create a root reference
-                DpSource = uploadImage(user.uid)
-                 console.log("line 88",  DpSource); 
-                }
 
-                    console.log("line 93");
-            db.collection("UserPersonalData").doc(user.uid).set({
-                Name,
-                DpSource:DpSource,
-            }).then(()=>{
+                        // create blob from local image url
+
+                        const blob =   fetch(ImageUrl).blob();
+                        // const blob =  response.blob();
+                        let userImagesRef = storage.ref().child('userProfiles').child(uid)
+                        const uploadTask = userImagesRef.put(blob)
+
+                        // Now get download url and show image upload progress
+                        uploadTask.on('state_changed', 
+                                (snapshot) => {
+                    // Observe state change events such as progress, pause, and resume
+                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                  }, 
+                  (error) => {
+                    // Handle unsuccessful uploads
+                    setSnackbarState({visible:true,message:error.message})
+                  }, 
+                  () => {
+                    // Handle successful uploads on complete
+                 
+                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
+                          //update details to firestore
+                          db.collection("UserPersonalData").doc(user.uid).set({
+                                      Name,
+                                          DPsource:downloadURL,
+                                 }).then(()=>{
                 
-                console.log('data added');
-            }).catch((e)=>{
-                console.log("data",e.message);
-            })
+                                console.log('data added');
+                                }).catch((e)=>{
+                            console.log("data",e.message);
+                                     })
+                                 })
+                             
+                    }).catch((e)=>{
+                             console.log(e.message);                    });
+                  }
+                );
+                
+                
+            
+             
             setshowLoader(false)
             navigation.dispatch(
                 StackActions.replace('HomeScreen')
               );
               navigation.navigate('HomeScreen');
-        }).catch((e)=>{
-            setSnackbarState({visible:true,message:e.message})
-            console.log('60',e.message);
-            setshowLoader(false)
-        })
-    }
+       
+    } 
 
      const ValidationOfForm=()=>{
          if(!Name){
@@ -247,6 +243,7 @@ let openImagePickerAsync = async () => {
             mode="contained"
             style={style.SignUpButton}
             onPress={ValidationOfForm}
+            // onPress={uploadImage}
             >
             {/* show loader when trying to login after validating form */}
            {(showLoader)? <ActivityIndicator animating={true} color='white' />: "Sign Up"}

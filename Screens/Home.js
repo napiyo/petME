@@ -1,36 +1,19 @@
-import { StackActions } from '@react-navigation/native';
-import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import { Button } from 'react-native-paper'
-import auth from '../fierbaseConfiguration'
 
-export default function Home({navigation}) {
-    const LogOut=()=>{
-        auth.signOut().then(()=>{
-            navigation.dispatch(
-                StackActions.replace('AuthScreens')
-              );
-              
-          navigation.navigate('AuthScreens')  
-        }).catch((e)=>{
-            console.log(e);
-        })
-    }
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react'
+
+import HomeTab from './HomeTab';
+import ProfileTab from './ProfileTab';
+
+export default function Home() {
+    
+    const Tab = createBottomTabNavigator();
     return (
-        <View style={style.MainContainer}>
-        <Button
-        mode="contained"
-        onPress={LogOut}>
+        <Tab.Navigator>
+        <Tab.Screen name="Home" component={HomeTab} />
+        <Tab.Screen name="ProfileTab" component={ProfileTab} />
+      </Tab.Navigator>
         
         
-        Log Out</Button>
-        </View>
     )
 }
-const style =StyleSheet.create({
-    MainContainer:{
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center'
-    }
-})

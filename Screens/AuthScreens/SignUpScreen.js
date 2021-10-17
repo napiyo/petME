@@ -4,7 +4,9 @@ import {  TextInput,Button,HelperText, Snackbar,ActivityIndicator ,Avatar} from 
 import auth, { db, storage } from '../../fierbaseConfiguration';
 import { StackActions } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-
+import { useDispatch } from 'react-redux';
+import * as actions from '../../Redux/actions'
+import { StatusBar } from 'expo-status-bar';
 
 export default function SignUpScreen({navigation}) {
     const [Email, setEmail] = useState('')
@@ -19,6 +21,7 @@ export default function SignUpScreen({navigation}) {
      const [EmailError, setEmailError] = useState({isError: false , ErrorMessage:""})
      const [PasswordError, setPasswordError] = useState({isError: false , ErrorMessage:""})
      const [NameError, setNameError] = useState({isError: false , ErrorMessage:""})
+     const dispatch = useDispatch()
   
 //  Image picker function 
 let openImagePickerAsync = async () => {
@@ -71,6 +74,7 @@ let openImagePickerAsync = async () => {
       db.collection("userPersonalData").doc(uid).set({Name,Email,profileDp:url}).then(()=>{
           // data uploaded successfully
           setshowLoader(false)
+          dispatch(actions.userLoggedIn(Name,Email,uid,url))
           setSnackbarState({visible:true,message:"Welcome "+Name})
       }).catch((error)=>{
           // created account , uploaded Image (if any) , but coudln't save its data
@@ -81,7 +85,7 @@ let openImagePickerAsync = async () => {
       navigation.dispatch(
         StackActions.replace('HomeScreen')
       );
-      navigation.navigate('HomeScreen');
+     
   }
     const SignUp= ()=>{
        auth.createUserWithEmailAndPassword (Email,Password).then((Credential)=>{
@@ -96,6 +100,8 @@ let openImagePickerAsync = async () => {
             else{
                 UploadData("NA",user.uid)
             }
+            // Updating all user data to redux store
+
 
 
        }).catch((error)=>{
@@ -141,11 +147,13 @@ let openImagePickerAsync = async () => {
     return (
         <>
         <SafeAreaView>
+    
            <ScrollView>
         
         <KeyboardAvoidingView 
        behavior='position'
        style={{height:'100%'}}>
+           <StatusBar style="dark"/> 
 
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <View style={style.MainContainer}>

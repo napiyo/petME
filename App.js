@@ -7,20 +7,21 @@ import { Provider } from 'react-redux';
 import store from './Redux/store'
 import Home from './Screens/Home';
 import AuthScreens from './Screens/AuthScreens/AuthScreen';
-import auth from './fierbaseConfiguration';
+
 
 
 
 export default function App() {  
   const StackMain= createNativeStackNavigator();
-  auth.on
   return (
+    <Provider store={store}>
     <NavigationContainer>
       <StackMain.Navigator>
         <StackMain.Screen name="AuthScreens"  component={AuthScreens} options={{headerShown:false}}/>
         <StackMain.Screen name="HomeScreen"  component={Home} options={{headerShown:false}}/>
       </StackMain.Navigator>
     </NavigationContainer>
+    </Provider>
 
   );
 }

@@ -7,7 +7,7 @@ export function userLoggedIn(Name, Email, uid, DPurl) {
             Email: Email,
             uid: uid,
             DPurl: DPurl,
-            LoggedIn: true,
+           
         }
     }
 }
@@ -20,7 +20,7 @@ export function userLoggedOut() {
             Email: null,
             uid: null,
             DPur: null,
-            LoggedIn: false,
+           
         }
     }
 }

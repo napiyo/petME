@@ -5,7 +5,7 @@ const initialState = {
     Email: null,
     uid: null,
     DPurl: null,
-    LoggedIn: false,
+  
 }
 
 export default (userData = initialState, action) => {
@@ -17,7 +17,7 @@ export default (userData = initialState, action) => {
                 Email: action.payload.Email,
                 uid: action.payload.uid,
                 DPurl: action.payload.DPurl,
-                LoggedIn: true,
+               
             }
         case actionType.LoggedOut:
             return {
@@ -25,7 +25,7 @@ export default (userData = initialState, action) => {
                 Email: null,
                 uid: null,
                 DPurl: null,
-                LoggedIn: false,
+            
             }
         default:
             return userData

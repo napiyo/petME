@@ -1,15 +1,20 @@
 import { StackActions } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import React, { useRef, useState } from 'react'
-import {  Keyboard, KeyboardAvoidingView, StatusBar, StyleSheet, Text, TouchableWithoutFeedback ,View } from 'react-native'
+import React, { useRef, useState ,useEffect} from 'react'
+import {  Alert, Keyboard, KeyboardAvoidingView, StyleSheet, Text, TouchableWithoutFeedback ,View } from 'react-native'
 import {  TextInput,Button,HelperText, Snackbar,ActivityIndicator } from 'react-native-paper';
-import auth from '../../fierbaseConfiguration';
+import { useDispatch } from 'react-redux';
+import auth, { db } from '../../fierbaseConfiguration';
 import SignUpScreen from './SignUpScreen';
+import * as actions from '../../Redux/actions'
+import { StatusBar } from 'expo-status-bar'
 
 
 
 
 export function LoginScreen({navigation}){
+
+    const [AppLoaded, setAppLoaded] = useState(false)
     const [Email, setEmail] = useState('')
     const [Password, setPassword] = useState('')
     const [showLoader, setshowLoader] = useState(false)
@@ -17,15 +22,81 @@ export function LoginScreen({navigation}){
     const PasswordRef = useRef(null)
      const [EmailError, setEmailError] = useState({isError: false , ErrorMessage:""})
      const [PasswordError, setPasswordError] = useState({isError: false , ErrorMessage:""})
-    const Login=()=>{
+   const dispatch = useDispatch()
+     
+   
+   // geting information of user and return an object 
+   function getUserInformation(uid){
+   
+
+   }
+   
+   // checking for already user is logged in or not ?
+
+     useEffect(() => {
+        auth.onAuthStateChanged((user)=>{
+            if(user){
+                // user is already signed in
+                //update redux store
+                // get user data first 
+                const uid = user.uid;
+                // firebase userdata ref
+                var docRef = db.collection("userPersonalData").doc(uid);
+                    docRef.get().then((doc)=>{
+        // successfully got user data
+                  let userInfo=  doc.data()
+
+                  dispatch(actions.userLoggedIn(userInfo.Name,userInfo.Email,uid,userInfo.profileDp))
+                  // navigate to home
+                  navigation.dispatch(
+                   StackActions.replace('HomeScreen')
+                 );
+                //  navigation.navigate('HomeScreen');
+                }).catch((e)=>{
+                   // failed to get data
+                   setSnackbarState({visible:true,message:"Couldn't get your data --"+e.message})
+                 Alert.alert("something  Went wrong", "restart your app, beacuse we could not get your data from server")
+    })
+              
+ 
+            }
+            else{
+                setAppLoaded(true)
+            }
+            
+        })
+     }, [])
+   
+   
+   
+   
+     const Login=()=>{
         auth.signInWithEmailAndPassword(Email, Password).then((credential)=>{
             const user= credential.user;
+                  //update redux store
+                // get user data first 
+                const uid = user.uid;
+                // firebase userdata ref
+                var docRef = db.collection("userPersonalData").doc(uid);
+                    docRef.get().then((doc)=>{
+        // successfully got user data
+                  let userInfo=  doc.data()
+                      
+                  dispatch(actions.userLoggedIn(userInfo.Name,userInfo.Email,uid,userInfo.profileDp))
+                  // navigate to home
+                  navigation.dispatch(
+                   StackActions.replace('HomeScreen')
+                 );
+                //  navigation.navigate('HomeScreen');
+                }).catch((e)=>{
+                   // failed to get data
+                   setSnackbarState({visible:true,message:"Couldn't get your data --"+e.message})
+                 Alert.alert("something  Went wrong", "restart your app, beacuse we could not get your data from server")
+    })
+
             setshowLoader(false)
            
-            navigation.dispatch(
-                StackActions.replace('HomeScreen')
-              );
-              navigation.navigate('HomeScreen');
+         
         }).catch((e)=>{
             setSnackbarState({visible:true,message:e.message})
             setshowLoader(false)
@@ -56,17 +127,26 @@ export function LoginScreen({navigation}){
        
 
     }
-    
    
+    if(AppLoaded == false){
+        return <View style={{justifyContent:'center',alignItems:'center',flex:1}}>
+            <StatusBar style="dark"/> 
+                <ActivityIndicator animating={true} color='purple' />
+                <Text style={{marginTop:10}}>Create by Narendra</Text>
+        </View> }
+   else{
     return (
-        <>
+        <View>
+        <StatusBar style="dark"/> 
+        
+        
         
         <KeyboardAvoidingView 
          behavior={Platform.OS === "ios" ? "padding" : "height"}>
-             
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}
             >
                 
+       
             <View style={style.MainContainer}>
                 <View>
             
@@ -137,7 +217,7 @@ export function LoginScreen({navigation}){
        
         </TouchableWithoutFeedback>
         </KeyboardAvoidingView>
-        {/* snalbar */}
+        {/* snackbar */}
         <Snackbar
         visible={SnackbarState.visible}
         onDismiss={()=>setSnackbarState({visible:false,message:""})}
@@ -148,11 +228,13 @@ export function LoginScreen({navigation}){
           },
         }}>
         {SnackbarState.message}
+        
       </Snackbar>
      
-        </>
+        </View>
         
     )
+   }
 
 }
 

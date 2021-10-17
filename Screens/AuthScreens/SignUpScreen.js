@@ -11,6 +11,7 @@ export default function SignUpScreen({navigation}) {
     const [Password, setPassword] = useState('')
     const [Name, setName] = useState('')
     const [ImageUrl, setImageUrl] = useState('')
+    const [SignupBTnText, setSignupBTnText] = useState('Loading...')
     const [showLoader, setshowLoader] = useState(false)
     const [SnackbarState, setSnackbarState] = useState({visible:false,message:"I'm snackBar"})
     const PasswordRef = useRef(null)
@@ -36,75 +37,74 @@ let openImagePickerAsync = async () => {
 
     setImageUrl(pickerResult.uri);
   }
-  // upload image to firebase called by signUp fiunction after form validation done
- 
-    
-    
 
-                // Create a reference to folder where we will store this images here we will save in userImages
-                   
+  const GetBlob= async (uid)=>{
+      let response = await fetch(ImageUrl)
+      let blob = await response.blob()
+      uploadImage(blob,uid)
+  }
+  const uploadImage= (blob,uid)=>{
+        let storegeref = storage.ref().child("UserProfileImages").child(uid);
+        storegeref.put(blob).then((snapshot)=>{
+            //failed uploaded
+            setshowLoader(false) //hiding loading spinner from sign up button
+            // getting Image downloadable url
+            snapshot.ref.getDownloadURL().then((url)=>{
+                // Got downloadable url too
+                UploadData(url,uid)
+            }).catch((error)=>{
+                //uploaded Image but coudln't get its url
+                UploadData("ABE",uid)
+            })
 
-                    // Create a reference to 'images/mountains.jpg'
-                    // let userImagesRef = storageRef.child(ImageUrl);
-   
 
-  
-    const SignUp= async()=>{
-       
-        auth.createUserWithEmailAndPassword(Email, Password).then((credential)=>{
-
-            const user= credential.user;
-                // upload user profile picture to firebase storage
-
-                        // create blob from local image url
-
-                        const blob =   fetch(ImageUrl).blob();
-                        // const blob =  response.blob();
-                        let userImagesRef = storage.ref().child('userProfiles').child(uid)
-                        const uploadTask = userImagesRef.put(blob)
-
-                        // Now get download url and show image upload progress
-                        uploadTask.on('state_changed', 
-                                (snapshot) => {
-                    // Observe state change events such as progress, pause, and resume
-                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-                  }, 
-                  (error) => {
-                    // Handle unsuccessful uploads
-                    setSnackbarState({visible:true,message:error.message})
-                  }, 
-                  () => {
-                    // Handle successful uploads on complete
-                 
-                    uploadTask.snapshot.ref.getDownloadURL().then((downloadURL) => {
-                          //update details to firestore
-                          db.collection("UserPersonalData").doc(user.uid).set({
-                                      Name,
-                                          DPsource:downloadURL,
-                                 }).then(()=>{
-                
-                                console.log('data added');
-                                }).catch((e)=>{
-                            console.log("data",e.message);
-                                     })
-                                 })
-                             
-                    }).catch((e)=>{
-                             console.log(e.message);                    });
-                  }
-                );
-                
-                
-            
-             
+        }).catch((error)=>{
+            // Image uploading Failed
             setshowLoader(false)
-            navigation.dispatch(
-                StackActions.replace('HomeScreen')
-              );
-              navigation.navigate('HomeScreen');
-       
-    } 
+            setSnackbarState({visible:true,message:"Upload Failed "+error.message})
+
+        })
+        
+      
+  }
+  const UploadData =(url,uid)=>{
+      db.collection("userPersonalData").doc(uid).set({Name,Email,profileDp:url}).then(()=>{
+          // data uploaded successfully
+          setshowLoader(false)
+          setSnackbarState({visible:true,message:"Welcome "+Name})
+      }).catch((error)=>{
+          // created account , uploaded Image (if any) , but coudln't save its data
+          setshowLoader(false)
+          setSnackbarState({visible:true,message:"unable to upload your data"})
+      })
+      // moving to home Screen and removing auth screens from stack navigation so user cant go back to auth screens after login
+      navigation.dispatch(
+        StackActions.replace('HomeScreen')
+      );
+      navigation.navigate('HomeScreen');
+  }
+    const SignUp= ()=>{
+       auth.createUserWithEmailAndPassword (Email,Password).then((Credential)=>{
+           let user = Credential.user
+           // New User Created with Email and Password Succesfully 
+            // 1 if Image is available then get its blob file and then upload it to firebase and then add user data
+
+            // checking for  file
+            if(!!ImageUrl){
+                GetBlob(user.uid)
+            }
+            else{
+                UploadData("NA",user.uid)
+            }
+
+
+       }).catch((error)=>{
+           // new user sign up failed
+           setSnackbarState({visible:true,message:error.message})
+           setshowLoader(false)
+       })
+        
+                } 
 
      const ValidationOfForm=()=>{
          if(!Name){
@@ -171,10 +171,10 @@ let openImagePickerAsync = async () => {
                 value={Name}
                 onChangeText={text => {
                     //update of email
-                    setName((text))
+                    setName(text)
                     //remove error
                     if(NameError.isError){
-                        setEmailError({isError:false,ErrorMessage:""})
+                        setNameError({isError:false,ErrorMessage:""})
                     }
                
                 }}
@@ -243,10 +243,10 @@ let openImagePickerAsync = async () => {
             mode="contained"
             style={style.SignUpButton}
             onPress={ValidationOfForm}
-            // onPress={uploadImage}
+          
             >
             {/* show loader when trying to login after validating form */}
-           {(showLoader)? <ActivityIndicator animating={true} color='white' />: "Sign Up"}
+           {(showLoader)? (<><ActivityIndicator animating={true} color='white' /> {SignupBTnText}</>): "Sign Up"}
             </Button>
             </View>
             <View>

@@ -34,6 +34,9 @@ export function LoginScreen({navigation}){
    // checking for already user is logged in or not ?
 
      useEffect(() => {
+         // ISSUE
+         // when user login it  listen too. and it redirect to home page too. so home page entry animation animates twice
+         
         auth.onAuthStateChanged((user)=>{
             if(user){
                 // user is already signed in

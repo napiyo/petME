@@ -19,4 +19,15 @@ petMe  is connection between  --> need someone to take of their pet for temporar
 
 **** 
 work in progress
+****
 
+# Day 3 updates
+<div style="display:flex,flex-direction:row">
+<img src="https://user-images.githubusercontent.com/88178000/137770957-5a362768-5235-4675-bb1d-6d14c0ed38bb.jpeg" alt="HomePage ScreenShot"  height="450">
+
+<img src="https://user-images.githubusercontent.com/88178000/137770970-fbdef904-ca9d-4662-a4b8-a96ee8825b13.jpeg" alt="HomePage ScreenShot"  height="450">
+
+<img src="https://user-images.githubusercontent.com/88178000/137770979-863d61aa-8622-49bb-b650-6a766e5436d2.jpeg" alt="HomePage ScreenShot"  height="450">
+
+
+</div>

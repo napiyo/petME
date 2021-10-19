@@ -103,7 +103,9 @@ npm install
     "redux": "^4.1.1"
   },
 ```
-3. Run Project
+3. Add firebaseConfiguration.js
+- you will need to add your firebaseConfiguration file and export firestore instance as db 
+5. Run Project
 - download expo go App from play store or App store (only for real devices ), if you're using emulator it will automatically install
 > to run on IOS from windows you'll need expo Go App
 ```

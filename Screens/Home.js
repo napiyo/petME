@@ -23,10 +23,10 @@ export default function Home({navigation}) {
    }, [userData.uid])
     return (
         <Tab.Navigator>
-        <Tab.Screen name="HomeTab" component={HomeTab} options={{headerShown:false,tabBarIcon:()=><IconButton icon="home" size={25}/> }}/>
-        <Tab.Screen name="CreatePost" component={CreatePost} options={{tabBarIcon:()=><IconButton icon="dog-side" size={25}/> }} />
-        <Tab.Screen name="ProfileTab" component={ProfileTab} options={{title:"Profile",tabBarIcon:(focused)=><IconButton icon="account-circle" /> }}/>
-        <Tab.Screen name="HistoryTab" component={History} options={{title:"History",tabBarIcon:(f,c,s)=><IconButton icon="history"/> }}/>
+        <Tab.Screen name="HomeTab" component={HomeTab} options={{headerShown:false,tabBarIcon:({focused,color})=><IconButton icon="home" size={25} color={color}/> }}/>
+        <Tab.Screen name="CreatePost" component={CreatePost} options={{tabBarIcon:({color})=><IconButton icon="dog-side" size={25} color={color}/>,  }} />
+        <Tab.Screen name="ProfileTab" component={ProfileTab} options={{title:"Profile",tabBarIcon:({color})=><IconButton icon="account-circle" color={color} /> }}/>
+        <Tab.Screen name="HistoryTab" component={History} options={{headerShown:false,tabBarIcon:({color})=><IconButton icon="history" color={color}  /> }}/>
       </Tab.Navigator>
         
         

@@ -1,4 +1,4 @@
-import { NavigationContainer, NavigationContainerRefContext } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
@@ -11,6 +11,7 @@ import AuthScreens from './Screens/AuthScreens/AuthScreen';
 
 
 
+
 export default function App() {  
   const StackMain= createNativeStackNavigator();
   return (
@@ -19,6 +20,7 @@ export default function App() {
       <StackMain.Navigator>
         <StackMain.Screen name="AuthScreens"  component={AuthScreens} options={{headerShown:false}}/>
         <StackMain.Screen name="HomeScreen"  component={Home} options={{headerShown:false}}/>
+     
       </StackMain.Navigator>
     </NavigationContainer>
     </Provider>

@@ -23,7 +23,7 @@ export default function ProfileTab({navigation}) {
         <View style={style.MainContainer}>
             <View style={{flexDirection:'row',marginBottom:20}}> 
          <View style={{marginRight:20}}>
-             {(userData.DPurl != "NA")?(<Avatar.Image source={{uri:userData.DPurl}} size={80}/>):<Avatar.Text size={175} label={userData.Name.substring(0,2).toUpperCase()}/>}</View>
+             {(userData.DPurl != "NA")?(<Avatar.Image source={{uri:userData.DPurl}} size={80}/>):<Avatar.Text size={80} label={userData.Name.substring(0,2).toUpperCase()}/>}</View>
             <TextInput editable={false} style={{flex:1,fontSize:21,}} label="Name" value={userData.Name}></TextInput>
         </View>
         <TextInput editable={false} style={{fontSize:21,marginBottom:20}} label="Email" value={userData.Email}></TextInput>

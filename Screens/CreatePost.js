@@ -1,5 +1,5 @@
 import React, { useState,useRef } from 'react'
-import { Alert, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, KeyboardAvoidingView, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { Avatar, Button, TextInput } from 'react-native-paper'
 import * as ImagePicker from 'expo-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -42,7 +42,7 @@ let openImagePickerAsync = async () => {
     setImageUrl(pickerResult.uri);
   }
   const uploadpostData=(url,timestamp)=>{
-    db.collection("PetPosts").doc(timestamp).set({...PetDetails,From_Date,To_Date,Image:url,key:timestamp,uid:userData.uid,active:true}).then(()=>{
+    db.collection("PetPosts").doc(timestamp).set({...PetDetails,From_Date,To_Date,Image:url,key:timestamp,uid:userData.uid,active:true,requests:[]}).then(()=>{
         // data uploaded successfully
         setshowLoading(false)
         Alert.alert("Successed","Your Request has been Posted")
@@ -116,7 +116,7 @@ const uploadPost =(blob)=>{
         <KeyboardAvoidingView style={style.MainContainer} 
         enabled={shiftKeyBoard}
         behavior="position">
-         <ScrollView style={{width:'100%'}} bounces={false}>
+         <ScrollView style={{width:'100%'}} >
         <View style={style.MainContainer}>
             <View style={style.chooseDpContainer}>
   <TouchableOpacity onPress={openImagePickerAsync} style={style.chooseDpContainer}>
@@ -179,7 +179,7 @@ const uploadPost =(blob)=>{
     
   <Text>choose Date  till you want someone to take care of your pet</Text>
 
-    <View style={{flexDirection:'row',width:'100%',marginVertical:6,marginLeft:21}}>
+   { (Platform.OS=="ios") && <View style={{flexDirection:'row',width:'100%',marginVertical:6,marginLeft:21}}>
     
     <DateTimePicker
           testID="dateTimePicker"
@@ -188,6 +188,7 @@ const uploadPost =(blob)=>{
           is24Hour={true}
           display="default"
           style={{flex:1}}
+          
           onChange={(e,date)=>setFrom_Date(date)}
         />
     
@@ -204,7 +205,7 @@ const uploadPost =(blob)=>{
         />
 
 
-    </View>
+    </View>}
     <Button mode="contained" style={{marginVertical:16, width:'100%',marginBottom:66}}
     onPress={Validation}
     loading={showLoading}

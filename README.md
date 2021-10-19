@@ -28,6 +28,8 @@ work in progress
 <img src="https://user-images.githubusercontent.com/88178000/137770970-fbdef904-ca9d-4662-a4b8-a96ee8825b13.jpeg" alt="HomePage ScreenShot"  height="450">
 
 <img src="https://user-images.githubusercontent.com/88178000/137770979-863d61aa-8622-49bb-b650-6a766e5436d2.jpeg" alt="HomePage ScreenShot"  height="450">
+  <img src="https://user-images.githubusercontent.com/88178000/137784393-6c4a41e7-16fd-4064-9420-c30adc961c7b.jpeg" alt="HomePage ScreenShot"  height="450">
+  <img src="https://user-images.githubusercontent.com/88178000/137784408-b39afb23-0e07-42d4-b63d-dc19cc774d0e.jpeg" alt="HomePage ScreenShot"  height="450">
 
 
-</div>
+

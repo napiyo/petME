@@ -28,13 +28,15 @@ petMe  is connection between  --> need someone to take of their pet for temporar
 **** 
 ## Get started
 > learnt React-Native and built petMe in 5 days
+
+## [visit app in expo go- click me](https://expo.dev/@napiyo/petME)
 <html>
 <div style="display:flex,flex-direction:row">
   <div>
    <a id="1"> <h2>1. See the App on Android</h2></a>
     <p>download  <a href="https://play.google.com/store/apps/details?id=host.exp.exponent&hl=en_IN&gl=US">expo go  app</a> from play store and then scan this qr code or  go to :  <a href="https://expo.dev/@napiyo/petME">click me</a></p>
      <p>this app can run on both Android and ios, but ios dont allow apps from outside App store. and petME is not available on app store yet so use android for preview </p>
-<img src="https://user-images.githubusercontent.com/88178000/137981267-95cf2ab5-6a63-4cae-a6b6-c56767875a70.jpg" alt="HomePage ScreenShot"  height="500">
+<!-- <img src="https://user-images.githubusercontent.com/88178000/137981267-95cf2ab5-6a63-4cae-a6b6-c56767875a70.jpg" alt="HomePage ScreenShot"  height="500"> -->
       </div>
   <a id="2"><h2>2. ScreenShots tour</h2></a>
   <div> <h3><li>Login And Sign up screens</li>
